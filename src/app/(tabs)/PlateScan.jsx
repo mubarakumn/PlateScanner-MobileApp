@@ -9,14 +9,14 @@ import { useNavigation } from '@react-navigation/native'; // Import navigation h
 import { router } from 'expo-router';
 import {visionEndPoint, visionKey } from '@env'
 
+    // "react-native-camera": "^4.2.1",
+
 const PlateScan = (props) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [loading, setLoading] = useState(false);
   const cameraRef = useRef(null);
 
   const navigation = useNavigation(); // Initialize navigation
-
-console.log("the url", visionEndPoint);
 
   useEffect(() => {
     (async () => {

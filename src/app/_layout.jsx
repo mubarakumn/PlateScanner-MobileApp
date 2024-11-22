@@ -11,6 +11,7 @@ export default function AppLayout() {
         headerStyle: { backgroundColor: "black" },
         headerTintColor: "white",
       }} />
+      {/* <Stack.Screen name="/"  options={{ headerShown: false }} /> */}
       <Stack.Screen name="Auth/LoginScreen" options={{ headerShown: false }} />
       <Stack.Screen name="Auth/SignupScreen" options={{ headerShown: false }} />
       <Stack.Screen name='Admin' options={{ headerShown: false }} />
@@ -18,3 +19,4 @@ export default function AppLayout() {
     </Stack>
   );
 }
+ 
