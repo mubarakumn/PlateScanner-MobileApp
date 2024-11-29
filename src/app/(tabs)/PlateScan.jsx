@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
 import { Camera, CameraView } from 'expo-camera';
 import axios from 'axios';
+import React, { useState, useRef, useEffect } from 'react';
 import { storage } from '../../utils/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -15,7 +15,7 @@ const PlateScan = (props) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [loading, setLoading] = useState(false);
   const cameraRef = useRef(null);
-
+ 
   const navigation = useNavigation(); // Initialize navigation
 
   useEffect(() => {
