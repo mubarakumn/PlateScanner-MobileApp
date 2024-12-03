@@ -6,7 +6,5 @@
     // "expo-splash-screen": "~0.27.5",
     // "expo-status-bar": "~1.12.1",
     // "expo-web-browser": "~13.0.3",
-    // "react-native-dotenv": "^3.4.11",
     // "react-native-safe-area-context": "^4.10.5",
     // "react-native-screens": "^3.31.1",
-    // "react-native-web": "~0.19.10"

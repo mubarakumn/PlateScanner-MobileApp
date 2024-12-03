@@ -16,7 +16,7 @@ export default function Comments() {
   // Function to fetch plate data based on the plate number
   const fetchPlateData = async () => {
     try {
-      const response = await axios.get(`http://192.168.43.153:5000/plate/${plateNumber}`);
+      const response = await axios.get(`https://plate-scanner-back-end.vercel.app/plate/${plateNumber}`);
       const plate = response.data;
       if (plate) {
         setCommentList(plate.Comment || []);  // Set the current comments
@@ -46,7 +46,7 @@ export default function Comments() {
   // Function to update comments on the backend
   const updatePlateComments = async () => {
     try {
-      const response = await axios.put(`http://192.168.43.153:5000/plate/${plateNumber}/update-comments`, {
+      const response = await axios.put(`https://plate-scanner-back-end.vercel.app/plate/${plateNumber}/update-comments`, {
         Comment: commentList,  // Send the updated comments array
       });
       if (response.status === 200) {

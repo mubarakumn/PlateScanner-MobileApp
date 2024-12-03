@@ -22,7 +22,7 @@ useEffect(() => {
         setLoading(true);
 
         // Make a request to the server with the token in the Authorization header
-        const response = await axios.get('http://192.168.43.153:5000/verify-token', {
+        const response = await axios.get('https://plate-scanner-back-end.vercel.app/verify-token', {
           headers: {
             Authorization: `Bearer ${token}`  // Send token in Authorization header
           }
@@ -36,16 +36,20 @@ useEffect(() => {
           if (user.role === 'admin') {
             router.replace('Admin/AdminDash');
           }
-
+          
           setIsAuthenticated(true);  // User is authenticated
         } else {
           throw new Error('Invalid token or user not found');
         }
-
+        
       } catch (error) {
-        console.error('Error during token verification:', error.message);
-        Alert.alert('Authentication Error', error.message || 'Failed to verify token.');
-        setIsAuthenticated(false);
+        if (error.status === 403) {
+          router.replace('Auth/LoginScreen');
+          setIsAuthenticated(false);
+        }else{
+          Alert.alert('Authentication Error', error.message || 'Failed to verify token.');
+          console.error('Error during token verification:', error.message);
+        }
       } finally {
         setLoading(false);  // Ensure loading is stopped in all cases
       }
@@ -64,7 +68,7 @@ useEffect(() => {
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem('token');
-    router.push('Auth/LoginScreen');
+    router.replace('Auth/LoginScreen');
     Alert.alert('Success', 'Log out Successfully.');
   };
 
@@ -75,7 +79,7 @@ useEffect(() => {
     <View style={styles.container}>
       {
         isAuthenticated ? (
-          <Stack.Screen options={{ headerRight: () => <Button title="Logout" style={styles.btn} onPress={handleLogout} /> }} />
+          <Stack.Screen  options={{title: "Home", headerRight: () => <Button title="Logout" style={styles.btn} onPress={handleLogout} /> }} />
         ) : (
           <Stack.Screen options={{ headerRight: () => <Button title="Login" style={styles.btn} onPress={() => router.replace('Auth/LoginScreen')} /> }} />
         )

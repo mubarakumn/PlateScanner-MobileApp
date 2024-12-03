@@ -24,7 +24,10 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.almubarak.PlateScanner"
+      "package": "com.almubarak.PlateScanner",
+      "experimental": {
+        "newArchEnabled": true
+      }
     },
     "web": {
       "bundler": "metro",

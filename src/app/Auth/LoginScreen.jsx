@@ -14,6 +14,8 @@ const LoginScreen = () => {
   const [loading, setLoading] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [message, setMessage] = useState('');
+
   const router = useRouter();
 
 
@@ -27,7 +29,7 @@ useEffect(() => {
         setLoading(true);
 
         // Make a request to the server with the token in the Authorization header
-        const response = await axios.get('http://192.168.43.153:5000/verify-token', {
+        const response = await axios.get('https://plate-scanner-back-end.vercel.app/verify-token', {
           headers: {
             Authorization: `Bearer ${token}`  // Send token in Authorization header
           } 
@@ -41,7 +43,7 @@ useEffect(() => {
             router.replace('Admin/Admindash');
             
           } else {
-            router.replace('Index');  // Navigate to user dashboard or home
+            router.replace('/');  // Navigate to user dashboard or home
           }
 
           setIsAuthenticated(true);  // User is authenticated
@@ -80,7 +82,7 @@ useEffect(() => {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://192.168.43.153:5000/user/login', { email, password })
+      const response = await axios.post('https://plate-scanner-back-end.vercel.app/user/login', { email, password })
 
       const data = response.data;
       if (!response.status === 'success') {
@@ -98,11 +100,11 @@ useEffect(() => {
       if (data.role === 'admin') {
         router.replace('Admin/Admindash');
       } else {
-        router.replace('Index'); // Change to user dashboard if needed
+        router.replace('/'); 
       }
 
     } catch (error) {
-      Alert.alert('Login Error', error.message);
+      setMessage(error.message);
     } finally {
       setLoading(false);
     }
@@ -118,6 +120,9 @@ useEffect(() => {
     <View style={styles.container}>
       <Image source={logo} style={styles.logo} />
       <Text style={styles.title}>{resetLoading ? "Resetting Password" : "Login"}</Text>
+      {message && <View style={styles.message}>
+        <Text style={styles.messageText}>{message}</Text>
+        </View>}
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -169,6 +174,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 20,
+  },
+  message:{
+    marginBottom: 5,
+  },
+  messageText:{
+    color: "red",
   },
   input: {
     width: '100%',

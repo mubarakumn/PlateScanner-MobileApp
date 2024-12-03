@@ -15,7 +15,7 @@ export default function ViewPlate() {
   const fetchPlates = async () => {
     try {
       setLoading(true); // Start loading
-      const response = await axios.get('http://192.168.43.153:5000/plate');  // Replace with your API endpoint
+      const response = await axios.get('https://plate-scanner-back-end.vercel.app/plate');  // Replace with your API endpoint
       if (response.data.success) {
         setPlates(response.data.data);  // Access the 'data' array
       } else {

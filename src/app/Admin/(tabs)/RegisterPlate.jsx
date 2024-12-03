@@ -24,7 +24,7 @@ const RegisterPlate = () => {
 
     try {
       setLoading(true);  // Start loading
-      const response = await axios.post('http://192.168.43.153:5000/plate/add', formData);
+      const response = await axios.post('https://plate-scanner-back-end.vercel.app/plate/add', formData);
       setLoading(false);  // Stop loading
 
       if (response.status === 200) {

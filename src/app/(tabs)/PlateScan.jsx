@@ -5,18 +5,18 @@ import React, { useState, useRef, useEffect } from 'react';
 import { storage } from '../../utils/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import * as ImageManipulator from 'expo-image-manipulator';
-import { useNavigation } from '@react-navigation/native'; // Import navigation hook
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
 import {visionEndPoint, visionKey } from '@env'
 
-    // "react-native-camera": "^4.2.1",
+
+// "react-native-camera": "^4.2.1",
 
 const PlateScan = (props) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [loading, setLoading] = useState(false);
   const cameraRef = useRef(null);
+  const router = useRouter();
  
-  const navigation = useNavigation(); // Initialize navigation
 
   useEffect(() => {
     (async () => {
@@ -52,15 +52,16 @@ const PlateScan = (props) => {
       const response = await axios.post(url, body, { headers });
       const operationLocation = response.headers['operation-location'];
       let result = null;
-
-      // Poll the operation location URL until processing is completed
-       while (!result || result.status === 'running' || result.status === 'notStarted') {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+console.log(" processing");
+// Poll the operation location URL until processing is completed
+while (!result || result.status === 'running' || result.status === 'notStarted') {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
         const resultResponse = await axios.get(operationLocation, { headers });
         result = resultResponse.data;
       }
-
+      
       if (result.status === 'succeeded') {
+        console.log(" processed");
         return extractPlateNumber(result);
       } else {
         throw new Error('OCR failed');
@@ -97,7 +98,10 @@ const PlateScan = (props) => {
       });
       const uploadedUrl = await uploadImage(manipulatedUri.uri);
       if (uploadedUrl) {
+        console.log("starting ocr");
         const plateNumber = await recognizeTextAzure(uploadedUrl);
+        console.log("finish ocr");
+
         if (plateNumber) {
           const num = plateNumber;
           // Navigate to details screen

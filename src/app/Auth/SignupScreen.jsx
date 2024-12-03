@@ -10,6 +10,7 @@ const SignupScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
 
   // Function to handle sign-up
   const handleSignUp = async () => {
@@ -21,14 +22,14 @@ const SignupScreen = () => {
 
     try {
       // Send email and password to your JWT-authentication backend for user registration
-      const acct = await axios.post(`http://192.168.43.153:5000/user/register`, { email, password });
+      const acct = await axios.post(`https://plate-scanner-back-end.vercel.app/user/register`, { email, password });
 
       // After successful signup, redirect to the Login screen
       Alert.alert('Success', 'Account created successfully! Please log in.');
       router.replace('Auth/LoginScreen');
     } catch (error) {
       console.error('Sign-Up Error:', error);
-      Alert.alert('Sign-Up Error', error.response ? error.response.data.message : error.message);
+      setMessage( error.response ? error.response.data.message : error.message);
     } finally {
       setLoading(false);
     }
@@ -41,6 +42,10 @@ const SignupScreen = () => {
 
       {/* Title */}
       <Text style={styles.title}>Create Account</Text>
+
+      {message && <View style={styles.message}>
+        <Text style={styles.messageText}>{message}</Text>
+        </View>}
 
       {/* Email Input */}
       <TextInput
@@ -93,6 +98,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 20,
+  },
+  message:{
+    marginBottom: 5,
+  },
+  messageText:{
+    color: "red",
   },
   input: {
     width: '100%',

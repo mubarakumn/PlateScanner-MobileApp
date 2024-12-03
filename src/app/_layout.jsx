@@ -6,7 +6,7 @@ export default function AppLayout() {
 
   return (
     <Stack initialRouteName='Auth/LoginScreen'>
-      <Stack.Screen name="Index" options={{
+      <Stack.Screen name="/index" options={{
         title: "Home",
         headerStyle: { backgroundColor: "black" },
         headerTintColor: "white",

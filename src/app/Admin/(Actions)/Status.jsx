@@ -222,7 +222,7 @@ export default function Status() {
     }
 
     try {
-      const response = await axios.get(`http://192.168.43.153:5000/plate/${plateNumber}`);
+      const response = await axios.get(`https://plate-scanner-back-end.vercel.app/plate/${plateNumber}`);
       if (response.data) {
         setSelectedStatus(response.data.Status || []); // Ensure Status is an array
         Alert.alert('Success', `Statuses retrieved for plate: ${plateNumber}`);
@@ -244,7 +244,7 @@ export default function Status() {
 
     try {
       const response = await axios.put(
-        `http://192.168.43.153:5000/plate/${plateNumber}/update-status`,
+        `https://plate-scanner-back-end.vercel.app/plate/${plateNumber}/update-status`,
         { Status: selectedStatus }
       );
       if (response.status === 200) {

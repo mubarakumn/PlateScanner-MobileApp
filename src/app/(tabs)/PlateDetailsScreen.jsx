@@ -33,7 +33,7 @@ const PlateDetailsScreen = () => {
   const fetchPlateDetails = async (plateNum) => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://192.168.43.153:5000/plate/${plateNum}`);
+      const response = await axios.get(`https://plate-scanner-back-end.vercel.app/plate/${plateNum}`);
       if (response.status === 200) {
         setFetchedPlateDetails(response.data);
         setComments(response.data.data.Comment || []);
@@ -71,20 +71,20 @@ const PlateDetailsScreen = () => {
     let apiUrl = '';
     switch (actionType) {
       case 'traffic':
-        apiUrl = `http://192.168.43.153:5000/platedetails/traffic/${numb}`;
+        apiUrl = `https://plate-scanner-back-end.vercel.app/platedetails/traffic/${numb}`;
         console.log(apiUrl);
         break;
       case 'stolen':
-        apiUrl = `http://192.168.43.153:5000/platedetails/stolen/${numb}`;
+        apiUrl = `https://plate-scanner-back-end.vercel.app/platedetails/stolen/${numb}`;
         break;
       case 'crime':
-        apiUrl = `http://192.168.43.153:5000/platedetails/crime/${numb}`;
+        apiUrl = `https://plate-scanner-back-end.vercel.app/platedetails/crime/${numb}`;
         break;
       case 'wanted':
-        apiUrl = `http://192.168.43.153:5000/platedetails/wanted/${numb}`;
+        apiUrl = `https://plate-scanner-back-end.vercel.app/platedetails/wanted/${numb}`;
         break;
       case 'flagged':
-        apiUrl = `http://192.168.43.153:5000/platedetails/flagged/${numb}`;
+        apiUrl = `https://plate-scanner-back-end.vercel.app/platedetails/flagged/${numb}`;
         break;
       default:
         Alert.alert('Unknown Action', 'No action selected');
@@ -136,7 +136,7 @@ const PlateDetailsScreen = () => {
   const handleAddComment = async () => {
     if (newComment.trim() !== '') {
       try {
-        const response = await axios.post(`http://192.168.43.153:5000/plate/comment/${num}`, {
+        const response = await axios.post(`https://plate-scanner-back-end.vercel.app/plate/comment/${num}`, {
           Comment: newComment,
         });
 
