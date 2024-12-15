@@ -39,8 +39,8 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
-          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+          "cameraPermission": "Allow $(PlateScanner) to access your camera",
+          "microphonePermission": "Allow $(PlateScanner) to access your microphone",
           "recordAudioAndroid": true
         }
       ]
@@ -53,7 +53,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "39f4556d-75f5-47d8-9171-d022e4f7297f"
+        "projectId": "e3a21285-ecba-4eb1-bfbc-171bd0ee06ab"
       }
     }
   }
