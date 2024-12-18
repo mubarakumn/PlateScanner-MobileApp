@@ -6,17 +6,19 @@ import { storage } from '../../utils/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { useRouter } from 'expo-router';
-import {visionEndPoint, visionKey } from '@env'
+import { visionEndPoint, visionKey } from '@env'
+import ml from '@react-native-firebase/ml';
 
 
-// "react-native-camera": "^4.2.1",
 
+const keyend = "3fpoEaUYeOGL2rzCeVT8ZyiwJ2XqMR4HsGSgiJyrP1lwuZrdh3zxJQQJ99ALACYeBjFXJ3w3AAAFACOGXpSa"
+const endpoint = "https://almubarak.cognitiveservices.azure.com/"
 const PlateScan = (props) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [loading, setLoading] = useState(false);
   const cameraRef = useRef(null);
   const router = useRouter();
- 
+
 
   useEffect(() => {
     (async () => {
@@ -40,10 +42,10 @@ const PlateScan = (props) => {
     return result[0]?.replace(/[-\s]/g, '');
   };
 
-//Recognizing Text Using Azure 
+  //Recognizing Text Using Azure 
   const recognizeTextAzure = async (imageUrl) => {
-    const endpoint = visionEndPoint;
-    const key = visionKey;
+    const endpoint = endpoint;
+    const key = keyend;
     const url = `${endpoint}/vision/v3.2/read/analyze`;
     const headers = { 'Ocp-Apim-Subscription-Key': key, 'Content-Type': 'application/json' };
     const body = { url: imageUrl };
@@ -52,14 +54,14 @@ const PlateScan = (props) => {
       const response = await axios.post(url, body, { headers });
       const operationLocation = response.headers['operation-location'];
       let result = null;
-console.log(" processing");
-// Poll the operation location URL until processing is completed
-while (!result || result.status === 'running' || result.status === 'notStarted') {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+      console.log(" processing");
+      // Poll the operation location URL until processing is completed
+      while (!result || result.status === 'running' || result.status === 'notStarted') {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
         const resultResponse = await axios.get(operationLocation, { headers });
         result = resultResponse.data;
       }
-      
+
       if (result.status === 'succeeded') {
         console.log(" processed");
         return extractPlateNumber(result);
@@ -89,33 +91,50 @@ while (!result || result.status === 'running' || result.status === 'notStarted')
     }
   };
 
+  const uploadedUrl = "https://firebasestorage.googleapis.com/v0/b/platescanner-c1b66.appspot.com/o/images%2F1734503144020.jpg?alt=media&token=2362c1b7-d41c-4474-8232-6a1b5f9b7d40";
   const handleCameraStream = async () => {
-    if (cameraRef.current) {
-      const { uri } = await cameraRef.current.takePictureAsync({ quality: 1 });
-      const manipulatedUri = await ImageManipulator.manipulateAsync(uri, [{ resize: { width: 1024 } }], {
-        compress: 1,
-        format: ImageManipulator.SaveFormat.JPEG,
-      });
-      const uploadedUrl = await uploadImage(manipulatedUri.uri);
-      if (uploadedUrl) {
-        console.log("starting ocr");
-        const plateNumber = await recognizeTextAzure(uploadedUrl);
-        console.log("finish ocr");
+    try {
+      if (cameraRef.current) {
+        const { uri } = await cameraRef.current.takePictureAsync({ quality: 1 });
+        const manipulatedUri = await ImageManipulator.manipulateAsync(uri, [{ resize: { width: 1024 } }], {
+          compress: 1,
+          format: ImageManipulator.SaveFormat.JPEG,
+        });
+        // const uploadedUrl = await uploadImage(manipulatedUri.uri);
+        if (uploadedUrl) {
+          console.log("starting ocr");
+          const plateNumber = await recognizeTextAzure(uploadedUrl);
+          console.log("finish ocr");
 
-        if (plateNumber) {
-          const num = plateNumber;
-          // Navigate to details screen
-          router.push({
-            pathname:'/PlateDetailsScreen', 
-            params:{ num },
-        }); 
-        } else {
-          Alert.alert('Error', 'No plate number detected');
+          if (plateNumber) {
+            const num = plateNumber;
+            // Navigate to details screen
+            router.push({
+              pathname: '/PlateDetailsScreen',
+              params: { num },
+            });
+          } else {
+            Alert.alert('Error', 'No plate number detected');
+          }
         }
       }
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong during scanning.');
+    } finally {
+      setLoading(false);
     }
   };
 
+  // firbase-ml
+  const recognizeTextOffline = async (uploadedUrl) => {
+    try {
+      const result = await ml().cloudTextRecognizerProcessImage(uploadedUrl);
+      console.log('Recognized Text:', result.text);
+      return result.text;
+    } catch (error) {
+      console.error('Text Recognition Error:', error);
+    }
+  };
   if (hasPermission === null) {
     return <View style={styles.loadingContainer}><ActivityIndicator size="large" color="#000" /></View>;
   }
@@ -125,17 +144,17 @@ while (!result || result.status === 'running' || result.status === 'notStarted')
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>{!loading? "Welcome Officer" : "Waiting..."}</Text>
+      <Text style={styles.header}>{!loading ? "Welcome Officer" : "Waiting..."}</Text>
       <CameraView ref={cameraRef} style={styles.camera}>
         <View style={styles.cameraOverlay}>
-          <Text style={styles.cameraText}>{!loading? "Align the plate within the box" : "Processing..."}</Text>
+          <Text style={styles.cameraText}>{!loading ? "Align the plate within the box" : "Processing..."}</Text>
         </View>
       </CameraView>
 
       {loading && <ActivityIndicator size="large" color="#007BFF" style={styles.loader} />}
 
-      <TouchableOpacity style={styles.button} onPress={handleCameraStream} 
-      disabled={loading}
+      <TouchableOpacity style={styles.button} onPress={recognizeTextOffline}
+        disabled={loading}
       >
         <Text style={styles.buttonText}>Scan</Text>
       </TouchableOpacity>
