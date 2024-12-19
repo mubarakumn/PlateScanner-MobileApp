@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Stack, useRouter } from 'expo-router';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Feather } from '@expo/vector-icons';
 
 const  Admindash = ()=>{
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -110,10 +111,10 @@ const  Admindash = ()=>{
 
       {/* Actions Section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Administrative Tasks</Text>
+        <Text style={styles.sectionTitle}>Comments</Text>
         <View style={styles.Actions}>
           <TouchableOpacity style={styles.ActionsButton} onPress={() => router.push('Admin/Status')}>
-            <Text style={styles.ActionsButtonText}>Check Status</Text>
+            <Text style={styles.ActionsButtonText}>Add Comments</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.ActionsButton} onPress={() => router.push('Admin/Comments')}>
             <Text style={styles.ActionsButtonText}>View Comments</Text>
