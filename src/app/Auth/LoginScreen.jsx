@@ -14,7 +14,7 @@ const LoginScreen = () => {
   const [loading, setLoading] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [message, setMessage] = useState('');
+  const [message, setMessage] = useState('');
 
   const router = useRouter();
 
@@ -104,9 +104,9 @@ useEffect(() => {
       }
 
     } catch (error) {
-      if(response.status == 504){
+      if(error.status(504)){
         setMessage("Try again!");
-      }else if(response.status == 400){
+      }else if(error.status == 400){
         setMessage("Invalid cridential!");
       }else{
         console.log(error);

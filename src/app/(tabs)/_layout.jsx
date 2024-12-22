@@ -10,8 +10,8 @@ function _layout() {
             },
             tabBarLabel: "Scan",
             headerTitle:"Scanner",
-            headerStyle:{ backgroundColor: "black"},
-            headerTintColor:"white"
+            headerStyle:{ backgroundColor: "white"},
+            headerTintColor:"#007BFF"
         }}/>
         <Tabs.Screen name='PlateDetailsScreen' options={{
             tabBarIcon: ({color})=>{
@@ -19,8 +19,8 @@ function _layout() {
             },
             tabBarLabel: "Get Details",
             headerTitle:"Details",
-            headerStyle:{ backgroundColor: "black"},
-            headerTintColor:"white"
+            headerStyle:{ backgroundColor: "white"},
+            headerTintColor:"#007BFF"
         }}/>
     </Tabs>
   )

@@ -82,7 +82,15 @@ useEffect(() => {
       <>
         <View style={styles.content}>
           {!isAuthenticated ? (
-            <Text>Please login to Access this Screen</Text>
+            <View>
+              <Text>Please login to Access this Screen</Text>
+              <TouchableOpacity style={styles.btn} onPress={() => router.replace('Auth/LoginScreen')}>
+                <Text>
+                  <AntDesign name="login" size={24} color="#F44336" />
+                </Text>
+                <Text>login</Text>
+              </TouchableOpacity>
+            </View>
           ) : (
             <>
             <Text>User: {user?.email}</Text>

@@ -25,7 +25,7 @@ export default function ViewPlate() {
       setLoading(false);  // Set loading to false once data is fetched
     } catch (error) {
       console.error('Error fetching plates:', error);  // Log error details
-      setError('Failed to fetch plate numbers.');
+      setError('Failed!', error.message);
       setLoading(false);  // Stop loading if there's an error
     }
   };
@@ -77,15 +77,13 @@ export default function ViewPlate() {
   }
 
   // Handle error state
-  if (error) {
-    return (
-      <View style={styles.centered}>
+    {error &&
+        <View style={styles.centered}>
         <Text style={styles.errorText}>{error}</Text>
         <View>
         <AntDesign name="reload1" size={24} color="white" />
         </View>
       </View>
-    );
   }
 
   // Function to close the modal
@@ -97,16 +95,18 @@ export default function ViewPlate() {
   // Render the plate numbers using FlatList
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>List of Plate Numbers</Text>
-      <FlatList
-        data={plates}
-        renderItem={renderPlate}
-        keyExtractor={(item) => item._id}  // Use unique ID as key
-        contentContainerStyle={styles.list}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      />
+      { <View>
+        <Text style={styles.title}>List of Plate Numbers</Text>
+        <FlatList
+          data={plates}
+          renderItem={renderPlate}
+          keyExtractor={(item) => item._id}  // Use unique ID as key
+          contentContainerStyle={styles.list}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        />
+        </View>}
       {/* Modal to display full plate details */}
       {selectedPlate && (
         <Modal

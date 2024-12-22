@@ -12,10 +12,13 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  Modal,
 } from 'react-native';
 import PopupModal from '../Components/PopupModal';
 import MessageModal from '../Components/MessageModal';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 const PlateDetailsScreen = () => {
   const { num } = useLocalSearchParams(); // Access passed plate details
@@ -235,8 +238,8 @@ const handleAddComment = async () => {
             style={styles.actionButton}
             disabled={actionLoading}
           >
+            <MaterialIcons name="traffic" size={24} color="yellow" />
             <Text style={styles.actionText}>Traffic Violation</Text>
-            <View style={{ width: 80, height: 4, backgroundColor: 'yellow' }}></View>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -247,8 +250,8 @@ const handleAddComment = async () => {
             style={styles.actionButton}
             disabled={actionLoading}
           >
+            <FontAwesome5 name="car-crash" size={24} color="purple" />
             <Text style={styles.actionText}>Stolen</Text>
-            <View style={{ width: 80, height: 4, backgroundColor: 'purple' }}></View>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -259,20 +262,21 @@ const handleAddComment = async () => {
             style={styles.actionButton}
             disabled={actionLoading}
           >
+            <FontAwesome6 name="gun" size={24} color="black" />
             <Text style={styles.actionText}>Crime</Text>
-            <View style={{ width: 80, height: 4, backgroundColor: 'black' }}></View>
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() =>
               fetchedPlateDetails?.data.Status?.includes('wanted')
-                ? handleAlreadyAdded('wanted')
-                : handleAction('wanted')}
+              ? handleAlreadyAdded('wanted')
+              : handleAction('wanted')}
             style={styles.actionButton}
             disabled={actionLoading}
           >
+
+            <MaterialIcons name="theater-comedy" size={24} color="red" />
             <Text style={styles.actionText}>Wanted</Text>
-            <View style={{ width: 80, height: 4, backgroundColor: 'red' }}></View>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -283,8 +287,8 @@ const handleAddComment = async () => {
             style={styles.actionButton}
             disabled={actionLoading}
           >
+            <AntDesign name="warning" size={24} color="orange" />
             <Text style={styles.actionText}>Flag</Text>
-            <View style={{ width: 80, height: 4, backgroundColor: 'orange' }}></View>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -292,6 +296,7 @@ const handleAddComment = async () => {
             style={styles.actionButton}
             disabled={actionLoading}
           >
+            <FontAwesome6 name="pen-to-square" size={24} color="black" />
             <Text style={styles.actionText}>Get Plate Details</Text>
           </TouchableOpacity>
         </View>
@@ -374,9 +379,9 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     backgroundColor: '#FFFFFF',
-    padding: 15,
+    padding: 5,
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 5,
     marginVertical: 10,
     width: '48%', // Flex for 2 buttons per line
     alignItems: 'center',
