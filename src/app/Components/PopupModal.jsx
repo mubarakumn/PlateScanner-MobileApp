@@ -85,14 +85,14 @@ const styles = StyleSheet.create({
     marginRight: 5,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: '#ff4d4d',
+    backgroundColor: '#20220230',
     borderRadius: 5,
   },
   submitButton: {
     marginLeft: 5,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#007BFF',
     borderRadius: 5,
   },
   cancelText: {

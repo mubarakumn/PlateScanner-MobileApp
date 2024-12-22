@@ -159,14 +159,12 @@ const PlateScan = (props) => {
   }
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>{!loading ? "Welcome Officer" : "Waiting..."}</Text>
-      {cameraVisible && (
+      <Text style={styles.header}>{!loading ? "Welcome Officer" : "Please wait..."}</Text>
       <CameraView ref={cameraRef} style={styles.camera}>
         <View style={styles.cameraOverlay}>
           <Text style={styles.cameraText}>{!loading ? "Align the plate within the box" : "Processing..."}</Text>
         </View>
       </CameraView>
-     ) }
       {loading && <ActivityIndicator size="large" color="#007BFF" style={styles.loader} />}
 
       <TouchableOpacity style={styles.button} onPress={handleCameraStream}
