@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, FlatList, ActivityIndicator, BackHandler, Modal
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { router } from 'expo-router';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 export default function ViewPlate() {
   const [plates, setPlates] = useState([]);  // To store the plate numbers
@@ -80,6 +81,9 @@ export default function ViewPlate() {
     return (
       <View style={styles.centered}>
         <Text style={styles.errorText}>{error}</Text>
+        <View>
+        <AntDesign name="reload1" size={24} color="white" />
+        </View>
       </View>
     );
   }

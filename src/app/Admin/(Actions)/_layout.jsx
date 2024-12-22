@@ -12,22 +12,19 @@ export default function Layout() {
             Status: focused ? 'list-circle' : 'list-circle-outline',
             Comments: focused ? 'chatbubbles' : 'chatbubbles-outline',
           };
-
           return <Ionicons name={icons[route.name]} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: '#42f44b',  // Active tab color (green)
-        tabBarInactiveTintColor: 'gray',   // Inactive tab color (gray)
-        tabBarStyle: {
-          paddingVertical: 10,
-          backgroundColor: '#f8f9fa',
-          borderTopWidth: 0.5,
-          borderTopColor: '#dcdcdc',
-          height: 60,  // Taller tab bar for better look
-        },
-        tabBarLabelStyle: {
-          fontSize: 14,
-          fontWeight: '600',
-        },
+         },
+          tabBarActiveTintColor: '#007BFF',  // Active tab color (blue)
+          tabBarInactiveTintColor: '#888',  // Inactive tab color (gray)
+          tabBarStyle: {
+            backgroundColor: '#fff',  // Tab bar background color
+            paddingBottom: 5,
+          },
+          headerStyle: {
+            backgroundColor: '#007BFF',  // Header color
+          },
+          headerTintColor: '#fff',  // Header text/icon color
+          headerShown: false,  // Hide the header in all screens by default
       })}
     >
       {/* Status Screen */}
@@ -36,7 +33,6 @@ export default function Layout() {
         options={{
           tabBarLabel: 'Status',
           headerTitle: 'Update Plate Status',  // Customize the header title
-          
           headerStyle: {
             backgroundColor: '#f8f9fa',
           },

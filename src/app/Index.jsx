@@ -34,7 +34,7 @@ useEffect(() => {
           
           // Navigate based on user role
           if (user.role === 'admin') {
-            router.replace('Admin/AdminDash');
+            router.replace('Admin/Admindash');
           }
           
           setIsAuthenticated(true);  // User is authenticated
@@ -97,7 +97,6 @@ useEffect(() => {
                 Access the plate scanning feature, and explore more. Log out when you are done.
               </Text>
               <Button title="Get Started" onPress={() => router.push('PlateScan')} />
-              {/* <Button title="Go to Scanner" onPress={() => router.push('/PlateScan')} /> */}
             </>
           )}
         </View>

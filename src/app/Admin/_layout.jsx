@@ -5,8 +5,8 @@ function _layout() {
     <Stack
       initialRouteName="Admindash"
       screenOptions={{
-        headerStyle: { backgroundColor: "black" },  // Consistent header styling
-        headerTintColor: "white",  // White text/icons for header
+        headerStyle: { backgroundColor: "white" },  // Consistent header styling
+        headerTintColor: "#007BFF",  // White text/icons for header
         headerShown: true, 
       }}
     >

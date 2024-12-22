@@ -64,7 +64,8 @@ const PlateScan = (props) => {
       // Step 1: Send image for processing
       const response = await axios.post(url, body, { headers });
       const operationLocation = response.headers['operation-location'];
-      console.log('Operation Location:', operationLocation);
+
+      // console.log('Operation Location:', operationLocation);
 
       if (!operationLocation) {
         throw new Error('Operation Location not found in the response.');
@@ -73,7 +74,7 @@ const PlateScan = (props) => {
       // Step 2: Poll for results
       let result = null;
       while (!result || result.status === 'running' || result.status === 'notStarted') {
-        console.log('Polling Azure OCR results...');
+        // console.log('Polling Azure OCR results...');
         await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 2 seconds
         const pollResponse = await axios.get(operationLocation, { headers });
         result = pollResponse.data;
@@ -116,6 +117,9 @@ const PlateScan = (props) => {
       if (cameraRef.current) {
         const { uri } = await cameraRef.current.takePictureAsync({ quality: 1 });
 
+        // Hide camera after taking the picture
+        setCameraVisible(false); 
+
         const manipulatedUri = await ImageManipulator.manipulateAsync(uri, [{ resize: { width: 1024 } }], {
           compress: 1,
           format: ImageManipulator.SaveFormat.JPEG,
@@ -156,12 +160,13 @@ const PlateScan = (props) => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>{!loading ? "Welcome Officer" : "Waiting..."}</Text>
-      {!loading && <CameraView ref={cameraRef} style={styles.camera}>
+      {cameraVisible && (
+      <CameraView ref={cameraRef} style={styles.camera}>
         <View style={styles.cameraOverlay}>
           <Text style={styles.cameraText}>{!loading ? "Align the plate within the box" : "Processing..."}</Text>
         </View>
       </CameraView>
-      }
+     ) }
       {loading && <ActivityIndicator size="large" color="#007BFF" style={styles.loader} />}
 
       <TouchableOpacity style={styles.button} onPress={handleCameraStream}

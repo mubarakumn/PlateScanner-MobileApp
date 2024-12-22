@@ -104,7 +104,14 @@ useEffect(() => {
       }
 
     } catch (error) {
-      setMessage(error.message);
+      if(response.status == 504){
+        setMessage("Try again!");
+      }else if(response.status == 400){
+        setMessage("Invalid cridential!");
+      }else{
+        console.log(error);
+        setMessage(error.message);
+      }
     } finally {
       setLoading(false);
     }

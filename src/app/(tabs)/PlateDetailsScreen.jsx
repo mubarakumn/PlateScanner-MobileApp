@@ -63,28 +63,27 @@ const PlateDetailsScreen = () => {
     setNumber(plateNumber);
     fetchPlateDetails(plateNumber);
   };
-
+  
+  const numb = num || number
   // Handling Actions to Update Status
   const handleAction = async (actionType) => {
-    const numb = num || number
     setActionLoading(true);
     let apiUrl = '';
     switch (actionType) {
       case 'traffic':
-        apiUrl = `https://plate-scanner-back-end.vercel.app/platedetails/traffic/${numb}`;
-        console.log(apiUrl);
+        apiUrl = `https://plate-scanner-back-end.vercel.app/plate/${numb}/traffic?action=add`;
         break;
       case 'stolen':
-        apiUrl = `https://plate-scanner-back-end.vercel.app/platedetails/stolen/${numb}`;
+        apiUrl = `https://plate-scanner-back-end.vercel.app/plate/${numb}/stolen?action=add`;
         break;
       case 'crime':
-        apiUrl = `https://plate-scanner-back-end.vercel.app/platedetails/crime/${numb}`;
+        apiUrl = `https://plate-scanner-back-end.vercel.app/plate/${numb}/crime?action=add`;
         break;
       case 'wanted':
-        apiUrl = `https://plate-scanner-back-end.vercel.app/platedetails/wanted/${numb}`;
+        apiUrl = `https://plate-scanner-back-end.vercel.app/plate/${numb}/wanted?action=add`;
         break;
       case 'flagged':
-        apiUrl = `https://plate-scanner-back-end.vercel.app/platedetails/flagged/${numb}`;
+        apiUrl = `https://plate-scanner-back-end.vercel.app/plate/${numb}/flagged?action=add`;
         break;
       default:
         Alert.alert('Unknown Action', 'No action selected');
@@ -99,7 +98,8 @@ const PlateDetailsScreen = () => {
         Alert.alert('Error', "Couldn't update status");
       }
     } catch (error) {
-      Alert.alert('Error', "Feil t0 update status");
+      console.log(error);
+      Alert.alert('Error', "Failled to update status");
     } finally {
       setActionLoading(false); // Re-enable actions after request completes
     }
@@ -132,26 +132,33 @@ const PlateDetailsScreen = () => {
     Alert.alert('Action Already Taken', message);
   };
 
-  // Handling Commenting on plate number
-  const handleAddComment = async () => {
-    if (newComment.trim() !== '') {
+// Handling Commenting on plate number
+const handleAddComment = async () => {
+  if (newComment.trim() !== '') {
       try {
-        const response = await axios.post(`https://plate-scanner-back-end.vercel.app/plate/comment/${num}`, {
-          Comment: newComment,
-        });
-
-        if (response.status === 200) {
-          Alert.alert('Success', 'Comment added successfully');
-          setComments([...comments, newComment]);
-          setNewComment(''); // Clear the input field
-        }
+          const response = await axios.post(
+              `https://plate-scanner-back-end.vercel.app/plate/comments/${numb}`,
+              {
+                  Comment: newComment,
+                  action: 'add', // Action can be 'add' or 'remove'
+              }
+          );
+          console.log(response);
+          if (response.status === 200) {
+              Alert.alert('Success', 'Comment added successfully');
+              setComments([...comments, newComment]);
+              setNewComment(''); // Clear the input field
+          }
       } catch (error) {
-        Alert.alert('Error', 'Could not add comment');
+        console.log(error.response);
+          console.log('Errors:', error.response?.data || error.message);
+          Alert.alert('Error', error.response?.data?.message || 'Could not add comment');
       }
-    } else {
+  } else {
       Alert.alert('Warning', 'Comment cannot be empty');
-    }
-  };
+  }
+};
+
 
   return (
     <KeyboardAvoidingView
@@ -170,7 +177,17 @@ const PlateDetailsScreen = () => {
               <>
                 <Text style={styles.detailsText}>Owner: {fetchedPlateDetails.data.ownerName || 'N/A'}</Text>
                 <Text style={styles.detailsText}>Model: {fetchedPlateDetails.data.carModel || 'N/A'}</Text>
-                <Text style={styles.detailsText}>Registration Date: {fetchedPlateDetails.data.createdAt || 'N/A'}</Text>
+                <Text style={styles.detailsText}>
+                  Registration Date: {fetchedPlateDetails.data.createdAt ? 
+                    new Date(fetchedPlateDetails.data.createdAt).toLocaleString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      // hour: '2-digit',
+                      // minute: '2-digit',
+                      // hour12: true,
+                    }) : 'N/A'}
+                  </Text>
                 <View style={styles.statusWrapper}>
                   <Text style={styles.status}>Status: </Text>
                   {fetchedPlateDetails.data.Status ? (
