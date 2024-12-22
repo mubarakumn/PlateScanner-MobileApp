@@ -8,8 +8,8 @@ export default function AppLayout() {
     <Stack initialRouteName='Auth/LoginScreen'>
       <Stack.Screen name="index" options={{
         title: "Home",
-        headerStyle: { backgroundColor: "black" },
-        headerTintColor: "white",
+        headerStyle: { backgroundColor: "white" },
+        headerTintColor: "#007BFF",
       }} />
       {/* <Stack.Screen name="/"  options={{ headerShown: false }} /> */}
       <Stack.Screen name="Auth/LoginScreen" options={{ headerShown: false }} />

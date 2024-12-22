@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, Alert, ActivityIndicator, Image, StyleSheet } from 'react-native';
+import { View, Text, Button, Alert, ActivityIndicator, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import logo from '../../assets/images/logo.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import AntDesign from '@expo/vector-icons/AntDesign';
+
 
 const index = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -77,13 +79,6 @@ useEffect(() => {
   }
   return (
     <View style={styles.container}>
-      {
-        isAuthenticated ? (
-          <Stack.Screen  options={{title: "Home", headerRight: () => <Button title="Logout" style={styles.btn} onPress={handleLogout} /> }} />
-        ) : (
-          <Stack.Screen options={{ headerRight: () => <Button title="Login" style={styles.btn} onPress={() => router.replace('Auth/LoginScreen')} /> }} />
-        )
-      }
       <>
         <View style={styles.content}>
           {!isAuthenticated ? (
@@ -96,7 +91,25 @@ useEffect(() => {
               <Text style={styles.description}>
                 Access the plate scanning feature, and explore more. Log out when you are done.
               </Text>
-              <Button title="Get Started" onPress={() => router.push('PlateScan')} />
+              <View style={{display: 'flex', flexDirection: 'row', gap: 20, alignItems: 'center'}}>
+                  {
+                  isAuthenticated ? (
+                    <TouchableOpacity style={styles.btn} onPress={handleLogout}>
+                      <Text>
+                        <AntDesign name="logout" size={24} color="#F44336" />
+                      </Text>
+                      <Text>logout</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity style={styles.btn} onPress={() => router.replace('Auth/LoginScreen')}>
+                      <Text>
+                        <AntDesign name="login" size={24} color="#F44336" />
+                      </Text>
+                      <Text>login</Text>
+                    </TouchableOpacity>
+                  )}
+                <Button title="Get Started" onPress={() => router.push('PlateScan')} />
+              </View>
             </>
           )}
         </View>
@@ -143,6 +156,8 @@ const styles = StyleSheet.create({
   },
   btn: {
     borderRadius: 10,
+    display: 'flex',
+    alignItems: 'center',
   },
 });
 
