@@ -1,5 +1,5 @@
 {
-  "name": "platescanner",
+  "name": "plate scanner",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -32,7 +32,6 @@
     "react-dom": "18.3.1",
     "react-native": "0.76.3",
     "react-native-dotenv": "^3.4.11",
-    "react-native-screens": "^4.4.0",
     "react-native-web": "~0.19.13"
   },
   "devDependencies": {

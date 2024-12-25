@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "PlateScanner",
-    "slug": "PlateScanner",
+    "name": "Plate Scanner",
+    "slug": "Plate Scanner",
     "version": "1.1.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -39,8 +39,8 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow $(PlateScanner) to access your camera",
-          "microphonePermission": "Allow $(PlateScanner) to access your microphone",
+          "cameraPermission": "Allow $(Plate Scanner) to access your camera",
+          "microphonePermission": "Allow $(Plate Scanner) to access your microphone",
           "recordAudioAndroid": true
         }
       ]
@@ -53,6 +53,7 @@
         "origin": false
       },
       "eas": {
+        
         "projectId": "e3a21285-ecba-4eb1-bfbc-171bd0ee06ab"
       }
     }

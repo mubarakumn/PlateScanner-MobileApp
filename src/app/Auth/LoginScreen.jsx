@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Alert, StyleSheet } from 'react-native';
-import { Image, TouchableOpacity, ActivityIndicator } from 'react-native';
-import logo from '../../../assets/images/logo.png';
+import { View, Text, TextInput, Alert, StyleSheet, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import MessageModal from '../Components/MessageModal';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import logo from '../../../assets/images/logo.png';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -15,121 +13,128 @@ const LoginScreen = () => {
   const [resetLoading, setResetLoading] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [message, setMessage] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
 
   const router = useRouter();
 
+  const API_BASE_URL = 'https://plate-scanner-back-end.vercel.app';
 
-// To Check if user is Already logged in
-useEffect(() => {
-  const checkAuth = async () => {
-    const token = await AsyncStorage.getItem('token');
-      console.log("the token:", token);
-    if (token) {
-      try {
-        setLoading(true);
+  // To Check if user is Already logged in
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = await AsyncStorage.getItem('token');
+      console.log("Token:", token);
 
-        // Make a request to the server with the token in the Authorization header
-        const response = await axios.get('https://plate-scanner-back-end.vercel.app/verify-token', {
-          headers: {
-            Authorization: `Bearer ${token}`  // Send token in Authorization header
-          } 
-        });
+      if (token) {
+        try {
+          setLoading(true);
 
-        if (response && response.data) {
-          const user = response.data.user;  // Assuming your backend returns the user payload
-          
-          // Navigate based on user role
-          if (user.role === 'admin') {
-            router.replace('Admin/Admindash');
-            
+          const response = await axios.get(`${API_BASE_URL}/verify-token`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (response?.data?.user) {
+            const user = response.data.user;
+
+            if (user.role === 'admin') {
+              router.replace('Admin/Admindash');
+            } else {
+              router.replace('/');
+            }
+            setIsAuthenticated(true);
           } else {
-            router.replace('/');  // Navigate to user dashboard or home
+            throw new Error('Invalid token or user not found');
           }
-
-          setIsAuthenticated(true);  // User is authenticated
-        } else {
-          throw new Error('Invalid token or user not found');
+        } catch (error) {
+          console.error('Token verification error:', error.message);
+          if (error.response?.status === 403) {
+            console.log('Invalid Token or Expired');
+          }
+          setIsAuthenticated(false);
+        } finally {
+          setLoading(false);
         }
-
-      } catch (error) {
-        // console.log(error, "in login");
-        if(error.status === 403 ){
-         return console.log('Invalid Token or Expired')
-        }
-        console.error('Error during token verification:', error.message);
-
-        setIsAuthenticated(false);
-      } finally {
-        setLoading(false);  // Ensure loading is stopped in all cases
       }
+    };
 
-    } else {
-      // No token found, redirect to login
-      setLoading(false);
-    }
-  };
+    checkAuth();
+  }, []);
 
-  checkAuth();
-}, []);
-
-  // Function to handle login
   const handleLogin = async () => {
-    if (email === '' || password === '') {
-      <MessageModal visible={true} heading={"Error"} message={'Please fill in both fields'} />;
+    if (!email || !password) {
+      setMessage('Please fill in both fields');
+      setModalVisible(true);
       return;
     }
 
     setLoading(true);
-
     try {
-      const response = await axios.post('https://plate-scanner-back-end.vercel.app/user/login', { email, password })
+      const response = await axios.post(`${API_BASE_URL}/user/login`, { email, password });
 
       const data = response.data;
-      if (!response.status === 'success') {
-        throw new Error(data.message || 'Login failed');
-      }
-      // console.log(data);
 
-      // Save JWT token to AsyncStorage or state management
-      await AsyncStorage.setItem('token', response.data.token);
-
-      const token = data.token; // Adjust based on your response structure
+      await AsyncStorage.setItem('token', data.token);
       Alert.alert('Success', 'Login successful!');
 
-      // Navigate based on user role
       if (data.role === 'admin') {
         router.replace('Admin/Admindash');
       } else {
-        router.replace('/'); 
+        router.replace('/');
       }
-
     } catch (error) {
-      if(error.status(504)){
-        setMessage("Try again!");
-      }else if(error.status == 400){
-        setMessage("Invalid cridential!");
-      }else{
-        console.log(error);
-        setMessage(error.message);
+      console.error('Login error:', error.message);
+      const status = error.response?.status;
+
+      if (status === 504) {
+        setMessage('Try again!');
+      } else if (status === 400) {
+        setMessage('Invalid credentials!');
+      } else {
+        setMessage(error.message || 'An error occurred. Please try again.');
       }
+      setModalVisible(true);
     } finally {
       setLoading(false);
     }
   };
 
-  // Function to handle password reset
-  const handleResetPassword = () => {
-    // Your password reset logic here
-    Alert.alert('Password Reset', 'This feature is not yet implemented.');
+  // Reset Password
+  const handleResetPassword = async () => {
+    if (!email) {
+      Alert.alert('Error', 'Please enter your email address to reset your password.');
+      return;
+    }
+
+    setResetLoading(true);
+    try {
+      const response = await axios.post(`http://192.168.43.153:5000/user/forgot-password`, { email });
+
+      if (response.status === 200) {
+        Alert.alert('Success', 'Password reset code has been sent to your email.');
+        router.push('/Auth/ResetPassword');
+      }
+    } catch (error) {
+      console.error('Password reset error:', error.message);
+      Alert.alert('Error', 'Failed to send password reset code. Please try again.');
+    } finally {
+      setResetLoading(false);
+    }
   };
 
   return (
     <View style={styles.container}>
       <Image source={logo} style={styles.logo} />
       <Text style={styles.title}>{resetLoading ? "Resetting Password" : "Login"}</Text>
-      {message && <View style={styles.message}>
-        <Text style={styles.messageText}>{message}</Text>
-        </View>}
+
+      {modalVisible && (
+        <MessageModal
+          visible={modalVisible}
+          title="Error"
+          message={message}
+          close={() => setModalVisible(false)}
+        />
+      )}
+
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -182,12 +187,6 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 20,
   },
-  message:{
-    marginBottom: 5,
-  },
-  messageText:{
-    color: "red",
-  },
   input: {
     width: '100%',
     padding: 15,
@@ -201,7 +200,6 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#007BFF',
     paddingVertical: 15,
-    paddingHorizontal: 100,
     borderRadius: 8,
     width: '100%',
     alignItems: 'center',
