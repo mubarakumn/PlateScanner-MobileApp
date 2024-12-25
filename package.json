@@ -19,7 +19,6 @@
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-navigation/native": "^7.0.0",
     "@react-navigation/stack": "^7.1.1",
-    "adb": "^0.2.0",
     "axios": "^1.7.7",
     "expo": "~52.0.14",
     "expo-camera": "~16.0.8",
@@ -27,13 +26,14 @@
     "expo-image-manipulator": "~13.0.5",
     "expo-router": "~4.0.11",
     "expo-splash-screen": "^0.29.18",
+    "expo-updates": "~0.26.10",
     "firebase": "^10.13.2",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-native": "0.76.3",
     "react-native-dotenv": "^3.4.11",
-    "react-native-web": "~0.19.13",
-    "expo-updates": "~0.26.10"
+    "react-native-safe-area-context": "^5.0.0",
+    "react-native-web": "~0.19.13"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
