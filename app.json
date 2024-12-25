@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Plate Scanner",
-    "slug": "Plate Scanner",
+    "slug": "PlateScanner",
     "version": "1.1.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -21,6 +21,8 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
@@ -53,9 +55,15 @@
         "origin": false
       },
       "eas": {
-        
         "projectId": "e3a21285-ecba-4eb1-bfbc-171bd0ee06ab"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/e3a21285-ecba-4eb1-bfbc-171bd0ee06ab",
+      "fallbackToCacheTimeout": 0
     }
   }
 }
