@@ -107,7 +107,7 @@ const LoginScreen = () => {
 
     setResetLoading(true);
     try {
-      const response = await axios.post(`http://192.168.43.153:5000/user/forgot-password`, { email });
+      const response = await axios.post(`${API_BASE_URL}/user/forgot-password`, { email });
 
       if (response.status === 200) {
         Alert.alert('Success', 'Password reset code has been sent to your email.');

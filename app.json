@@ -5,7 +5,7 @@
     "version": "1.1.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "PlateScanner",
+    "scheme": "platescanner",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/logo.png",
