@@ -93,7 +93,7 @@ useEffect(() => {
             </View>
           ) : (
             <>
-            <Text>User: {user?.email}</Text>
+            <Text>User: {user?.name}</Text>
             <Image source={logo} style={styles.logo} />
               <Text style={styles.welcomeText}>Welcome to PlateNumber Scanner!</Text>
               <Text style={styles.description}>

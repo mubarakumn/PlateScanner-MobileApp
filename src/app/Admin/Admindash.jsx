@@ -37,12 +37,13 @@ const Admindash = () => {
           }
 
           if (response && response.data) {
+            // console.log(response.data);
             const user = response.data.user;  // Assuming your backend returns the user payload
             setUser(user);  // Store user details
 
             // Navigate based on user role
             if (user.role === 'user') {
-              router.replace('Index');  // Navigate to user dashboard or home
+              router.replace('index');  // Navigate to user dashboard or home
             }
 
             setIsAuthenticated(true);  // User is authenticated
@@ -195,7 +196,7 @@ const styles = StyleSheet.create({
   },
   heroText: {
     fontSize: 18,
-    fontWeight: 'meduim',
+    fontWeight: 'medium',
     color: '007BFF',
   },
   heroHint:{

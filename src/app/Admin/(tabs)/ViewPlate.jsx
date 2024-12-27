@@ -62,7 +62,7 @@ export default function ViewPlate() {
   // Render a plate item
   const renderPlate = ({ item }) => (
     <TouchableOpacity style={styles.plateItem} onPress={() => handlePlateClick(item)}>
-      <Text style={styles.plateText}>Plate Number: {item.PlateNumber}</Text>
+      <Text style={styles.plateText}>Plate Number: {item.plateNumber}</Text>
       <Text style={styles.plateText}>Owner: {item.ownerName}</Text>
     </TouchableOpacity>
   );
@@ -118,9 +118,13 @@ export default function ViewPlate() {
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>Plate Details</Text>
-              <Text style={styles.modalText}>Plate Number: {selectedPlate.PlateNumber}</Text>
-              <Text style={styles.modalText}>Owner: {selectedPlate.ownerName}</Text>
-              <Text style={styles.modalText}>Car Model: {selectedPlate.carModel}</Text>
+              <Text style={styles.modalText}>Plate Number: {selectedPlate.plateNumber}</Text>
+              <Text style={styles.modalText}>Owner's Name: {selectedPlate.ownerName}</Text>
+              <Text style={styles.modalText}>Phone: {selectedPlate.phone}</Text>
+              <Text style={styles.modalText}>vehicleType: {selectedPlate.vehicleType}</Text>
+              <Text style={styles.modalText}>Brand: {selectedPlate.brand}</Text>
+              <Text style={styles.modalText}>Chassis No: {selectedPlate.chassis}</Text>
+              <Text style={styles.modalText}>Color: {selectedPlate.color}</Text>
               <Text style={styles.modalText}>Comments: {selectedPlate.Comment.join(', ')}</Text>
               <Text style={styles.modalText}>Status: {selectedPlate.Status.join(', ')}</Text>
               <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
@@ -176,7 +180,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
-    alignItems: 'center',
+    alignItems: 'start',
   },
   modalTitle: {
     fontSize: 24,
@@ -192,6 +196,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#007BFF',
     borderRadius: 5,
+    alignItems: 'center'
   },
   closeButtonText: {
     color: 'white',

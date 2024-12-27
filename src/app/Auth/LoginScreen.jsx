@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Alert, StyleSheet, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TextInput, Alert, StyleSheet, ActivityIndicator, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import MessageModal from '../Components/MessageModal';
 import axios from 'axios';
@@ -18,6 +18,7 @@ const LoginScreen = () => {
   const router = useRouter();
 
   const API_BASE_URL = 'https://plate-scanner-back-end.vercel.app';
+  // const API_BASE_URL = 'http://192.168.43.153:5000';
 
   // To Check if user is Already logged in
   useEffect(() => {
@@ -122,9 +123,9 @@ const LoginScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Image source={logo} style={styles.logo} />
-      <Text style={styles.title}>{resetLoading ? "Resetting Password" : "Login"}</Text>
+      <Text style={styles.title}>{resetLoading ? "Reset Password" : "Login"}</Text>
 
       {modalVisible && (
         <MessageModal
@@ -135,42 +136,54 @@ const LoginScreen = () => {
         />
       )}
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
+      {/* Email Input */}
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Enter email</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="yourmail@gmail.com"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+        />
+      </View>
+
+      {/* Password Input */}
       {!resetLoading && (
-        <>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Enter password</Text>
           <TextInput
             style={styles.input}
-            placeholder="Password"
+            placeholder="Password123"
             value={password}
             onChangeText={setPassword}
             secureTextEntry
           />
-          <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
-            {loading ? <ActivityIndicator color="#FFF" /> : <Text style={styles.buttonText}>Login</Text>}
-          </TouchableOpacity>
-        </>
+        </View>
       )}
 
+      {/* Login Button */}
+      {!resetLoading  &&
+      <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
+        {loading ? <ActivityIndicator color="#FFF" /> : <Text style={styles.buttonText}>Login</Text>}
+      </TouchableOpacity>}
+
+      {/* Forgot Password Button */}
       <TouchableOpacity style={styles.resetButton} onPress={handleResetPassword} disabled={resetLoading}>
         {resetLoading ? <ActivityIndicator color="#007BFF" /> : <Text style={styles.resetButtonText}>Forgot Password?</Text>}
       </TouchableOpacity>
 
+      {/* Signup Link */}
       <Text style={styles.linkText} onPress={() => router.push('Auth/SignupScreen')}>
         Don't have an account? Sign up
       </Text>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
@@ -187,10 +200,24 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 20,
   },
+  label: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 5,
+    marginLeft: 5,
+    fontWeight: 'bold',  // Make label bold to differentiate from input text
+  },
+  inputContainer: {
+    width: '100%',
+    maxWidth: 400,
+    paddingHorizontal: 16,
+    marginBottom: 5,
+    marginLeft: 5,
+  },
   input: {
     width: '100%',
     padding: 15,
-    marginBottom: 15,
+    marginBottom:5,
     backgroundColor: '#FFF',
     borderRadius: 8,
     borderWidth: 1,

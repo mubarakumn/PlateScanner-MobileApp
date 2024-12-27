@@ -179,7 +179,11 @@ const handleAddComment = async () => {
             {fetchedPlateDetails ? (
               <>
                 <Text style={styles.detailsText}>Owner: {fetchedPlateDetails.data.ownerName || 'N/A'}</Text>
-                <Text style={styles.detailsText}>Model: {fetchedPlateDetails.data.carModel || 'N/A'}</Text>
+                <Text style={styles.detailsText}>Phone no: {fetchedPlateDetails.data.phone || 'N/A'}</Text>
+                <Text style={styles.detailsText}>vehicleType: {fetchedPlateDetails.data.vehicleType || 'N/A'}</Text>
+                <Text style={styles.detailsText}>Brand: {fetchedPlateDetails.data.brand || 'N/A'}</Text>
+                <Text style={styles.detailsText}>Chassis no: {fetchedPlateDetails.data.chassis || 'N/A'}</Text>
+                <Text style={styles.detailsText}>Color: {fetchedPlateDetails.data.color || 'N/A'}</Text>
                 <Text style={styles.detailsText}>
                   Registration Date: {fetchedPlateDetails.data.createdAt ? 
                     new Date(fetchedPlateDetails.data.createdAt).toLocaleString('en-US', {

@@ -37,36 +37,55 @@ export default function ResetPassword() {
       setLoading(false);
     }
   };
-  
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Reset Password</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Enter OTP"
-        value={otp}
-        onChangeText={setOTP}
-        keyboardType="numeric"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Enter new password"
-        value={newPassword}
-        onChangeText={setNewPassword}
-        secureTextEntry
-      />
+      <Text style={styles.title}>Reset Password</Text> 
+      {/* Email Input */}
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Enter email</Text> 
+        <TextInput 
+          style={styles.input}
+          placeholder="yourmail@gmail.com"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+        />
+      </View>
+
+      {/* OTP Input */}
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Enter OTP</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter OTP"
+          value={otp}
+          onChangeText={setOTP}
+          keyboardType="numeric"
+        />
+      </View>
+
+      {/* New Password Input */}
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Enter new password</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter new password"
+          value={newPassword}
+          onChangeText={setNewPassword}
+          secureTextEntry
+        />
+      </View>
+
+      {/* Reset Button */}
       <TouchableOpacity style={styles.button} onPress={handleResetPassword} disabled={loading}>
         {loading ? <ActivityIndicator color="#FFF" /> : <Text style={styles.buttonText}>Reset Password</Text>}
       </TouchableOpacity>
+
+      {/* Error or Success Message */}
       {message ? <Text style={styles.message}>{message}</Text> : null}
+
+      {/* Back to Login Link */}
       <Text style={styles.linkText} onPress={() => router.replace('/Auth/LoginScreen')}>
         Back to Login
       </Text>
@@ -88,10 +107,23 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#333',
   },
+  label: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 5,
+    marginLeft: 5,
+    fontWeight: 'bold', // Make label bold for emphasis
+  },
+  inputContainer: {
+    width: '100%',
+    maxWidth: 400,
+    paddingHorizontal: 16,
+    marginBottom: 5,
+  },
   input: {
     width: '100%',
     padding: 15,
-    marginBottom: 15,
+    marginBottom: 5,
     backgroundColor: '#FFF',
     borderRadius: 8,
     borderWidth: 1,
