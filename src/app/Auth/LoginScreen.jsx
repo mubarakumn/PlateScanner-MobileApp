@@ -75,7 +75,7 @@ const LoginScreen = () => {
       const data = response.data;
 
       await AsyncStorage.setItem('token', data.token);
-      Alert.alert('Success', 'Login successful!');
+      // Alert.alert('Success', 'Login successful!');
 
       if (data.role === 'admin') {
         router.replace('Admin/Admindash');
