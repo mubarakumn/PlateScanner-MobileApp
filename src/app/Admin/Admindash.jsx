@@ -2,6 +2,7 @@ import { Alert, Button, StyleSheet, Text, TouchableOpacity, View, ActivityIndica
 import React, { useEffect, useState } from 'react';
 import { Stack, useRouter } from 'expo-router';
 import axios from 'axios';
+import MessageModal from '../Components/MessageModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -13,6 +14,34 @@ const Admindash = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);  // To store authenticated user details
   const router = useRouter();
+  const [subscriptionEnded, setSubscriptionEnded] = useState(false);
+  const [subscriptionMessage, setSubscriptionMessage] = useState({});
+
+  // Function to check if user subscription has ended
+  const checkSubscription = async () => {
+    if (!user) return;
+
+    const userMail = user.email;
+    console.log("userMail", userMail);
+    try {
+      const response = await axios.get('https://plate-scanner-back-end.vercel.app/user/checksubscription', {
+        params: { email: userMail }
+      });
+      console.log("res from subs", response.data);
+      if (response.data.subscription) {
+        const { title, message, expiry } = response.data.subscription;
+        const expiryDate = new Date(expiry);
+        const currentDate = new Date();
+
+        if (currentDate > expiryDate) {
+          setSubscriptionEnded(true);
+          setSubscriptionMessage({ title, message, expiry });
+        }
+      }
+    } catch (error) {
+      console.error('Error checking subscription:', error.message);
+    }
+  };
 
   // To Check if user is Already logged in
   useEffect(() => {
@@ -35,9 +64,7 @@ const Admindash = () => {
             await AsyncStorage.removeItem('token');
             router.replace('Auth/LoginScreen');
           }
-
           if (response && response.data) {
-            // console.log(response.data);
             const user = response.data.user;  // Assuming your backend returns the user payload
             setUser(user);  // Store user details
 
@@ -69,6 +96,12 @@ const Admindash = () => {
     checkAuth();
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      checkSubscription();
+    }
+  }, [user]);
+
   // Logout function
   const handleLogout = () => {
     router.replace('Auth/LoginScreen');
@@ -82,6 +115,15 @@ const Admindash = () => {
 
   return (
     <View style={styles.container}>
+      {/* Subscription ended */}
+      <MessageModal
+        visible={subscriptionEnded}
+        title={subscriptionMessage.title || 'Subscription Ended'}
+        message={subscriptionMessage.message || 'Your subscription has ended. Please renew to continue using the app.'}
+        expiry={subscriptionMessage.expiry}
+        close={() => setSubscriptionEnded(false)}
+      />
+
       {/* Hero Section */}
       <View style={styles.hero}>
         <View style={styles.heroHeading}>
@@ -245,6 +287,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-
 
 export default Admindash;

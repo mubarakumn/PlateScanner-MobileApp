@@ -5,6 +5,7 @@ import logo from '../../assets/images/logo.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import MessageModal from './Components/MessageModal';
 
 
 const index = () => {
@@ -12,61 +13,93 @@ const index = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);  // New state to store user details
   const router = useRouter();
+  const [subscriptionEnded, setSubscriptionEnded] = useState(false);
+  const [subscriptionMessage, setSubscriptionMessage] = useState({});
 
+  // Function to check if user subscription has ended
+  const checkSubscription = async () => {
+    if (!user) return;
 
-// To Check if user is Already logged in
-useEffect(() => {
-  const checkAuth = async () => {
-    const token = await AsyncStorage.getItem('token');
+    const userMail = user.email;
+    console.log("userMail", userMail);
+    try {
+      const response = await axios.get('https://plate-scanner-back-end.vercel.app/user/checksubscription', {
+        params: { email: userMail }
+      });
+      console.log("res from subs", response.data);
+      if (response.data.subscription) {
+        const { title, message, expiry } = response.data.subscription;
+        const expiryDate = new Date(expiry);
+        const currentDate = new Date();
 
-    if (token) {
-      try {
-        setLoading(true);
-
-        // Make a request to the server with the token in the Authorization header
-        const response = await axios.get('https://plate-scanner-back-end.vercel.app/verify-token', {
-          headers: {
-            Authorization: `Bearer ${token}`  // Send token in Authorization header
-          }
-        });
-
-        if (response && response.data) {
-          const user = response.data.user;  // Assuming your backend returns the user payload
-          setUser(user);  // Store user details
-          
-          // Navigate based on user role
-          if (user.role === 'admin') {
-            router.replace('Admin/Admindash');
-          }
-          
-          setIsAuthenticated(true);  // User is authenticated
-        } else {
-          throw new Error('Invalid token or user not found');
+        if (currentDate > expiryDate) {
+          setSubscriptionEnded(true);
+          setSubscriptionMessage({ title, message, expiry });
         }
-        
-      } catch (error) {
-        if (error.status === 403) {
-          router.replace('Auth/LoginScreen');
-          setIsAuthenticated(false);
-        }else{
-          Alert.alert('Authentication Error', error.message || 'Failed to verify token.');
-          console.error('Error during token verification:', error.message);
-        }
-      } finally {
-        setLoading(false);  // Ensure loading is stopped in all cases
       }
-
-    } else {
-      // No token found, redirect to login
-      router.replace('Auth/LoginScreen');
-      setLoading(false);
+    } catch (error) {
+      console.error('Error checking subscription:', error.message);
     }
   };
 
-  checkAuth();
-}, []);
 
+  // To Check if user is Already logged in
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = await AsyncStorage.getItem('token');
 
+      if (token) {
+        try {
+          setLoading(true);
+
+          // Make a request to the server with the token in the Authorization header
+          const response = await axios.get('https://plate-scanner-back-end.vercel.app/verify-token', {
+            headers: {
+              Authorization: `Bearer ${token}`  // Send token in Authorization header
+            }
+          });
+
+          if (response && response.data) {
+            const user = response.data.user;  // Assuming your backend returns the user payload
+            setUser(user);  // Store user details
+
+            // Navigate based on user role
+            if (user.role === 'admin') {
+              router.replace('Admin/Admindash');
+            }
+
+            setIsAuthenticated(true);  // User is authenticated
+          } else {
+            throw new Error('Invalid token or user not found');
+          }
+
+        } catch (error) {
+          if (error.status === 403) {
+            router.replace('Auth/LoginScreen');
+            setIsAuthenticated(false);
+          } else {
+            Alert.alert('Authentication Error', error.message || 'Failed to verify token.');
+            console.error('Error during token verification:', error.message);
+          }
+        } finally {
+          setLoading(false);  // Ensure loading is stopped in all cases
+        }
+
+      } else {
+        // No token found, redirect to login
+        router.replace('Auth/LoginScreen');
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      checkSubscription();
+    }
+  }, [user]);
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem('token');
@@ -80,6 +113,14 @@ useEffect(() => {
   return (
     <View style={styles.container}>
       <>
+        {/* Subscription ended */}
+        <MessageModal
+          visible={subscriptionEnded}
+          title={subscriptionMessage.title || 'Subscription Ended'}
+          message={subscriptionMessage.message || 'Your subscription has ended. Please renew to continue using the app.'}
+          expiry={subscriptionMessage.expiry}
+          close={() => setSubscriptionEnded(false)}
+        />
         <View style={styles.content}>
           {!isAuthenticated ? (
             <View>
@@ -93,14 +134,14 @@ useEffect(() => {
             </View>
           ) : (
             <>
-            <Text>User: {user?.name}</Text>
-            <Image source={logo} style={styles.logo} />
+              <Text>User: {user?.name}</Text>
+              <Image source={logo} style={styles.logo} />
               <Text style={styles.welcomeText}>Welcome to PlateNumber Scanner!</Text>
               <Text style={styles.description}>
                 Access the plate scanning feature, and explore more. Log out when you are done.
               </Text>
-              <View style={{display: 'flex', flexDirection: 'row', gap: 20, alignItems: 'center'}}>
-                  {
+              <View style={{ display: 'flex', flexDirection: 'row', gap: 20, alignItems: 'center' }}>
+                {
                   isAuthenticated ? (
                     <TouchableOpacity style={styles.btn} onPress={handleLogout}>
                       <Text>
