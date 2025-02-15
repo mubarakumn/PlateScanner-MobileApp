@@ -57,10 +57,11 @@ const SignupScreen = () => {
         <Text style={styles.label}>Enter name</Text>
         <TextInput
           style={styles.input}
-          placeholder="Ahmad ismail"
+          placeholder="Full name"
           value={name}
           onChangeText={setName}
-          autoCapitalize="none"
+          keyboardType='name-phone-pad'
+          autoCapitalize="words"
         />
 
         {/* Email Input */}
@@ -78,7 +79,7 @@ const SignupScreen = () => {
         <Text style={styles.label}>Enter password</Text>
         <TextInput
           style={styles.input}
-          placeholder="password123"
+          placeholder="password"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
